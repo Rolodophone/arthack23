@@ -2,10 +2,7 @@ import org.openrndr.Fullscreen
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noclear.NoClear
-import org.openrndr.extra.olive.oliveProgram
-import org.openrndr.math.Vector2
 import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random.Default.nextDouble
@@ -28,7 +25,7 @@ fun main() = application {
 		fullscreen = Fullscreen.SET_DISPLAY_MODE
 
     }
-    oliveProgram {
+    program {
 		drawer.clear(ColorRGBa.WHITE)
 
 		extend(NoClear())
