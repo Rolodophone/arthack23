@@ -1,5 +1,5 @@
 enableFeaturePreview("VERSION_CATALOGS")
-rootProject.name = "openrndr-template"
+rootProject.name = "arthack23"
 
 val openrndrUseSnapshot = false
 val orxUseSnapshot = false

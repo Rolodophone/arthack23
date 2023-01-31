@@ -3,10 +3,10 @@ import org.gradle.internal.os.OperatingSystem
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "org.openrndr.template"
-version = "0.4.0"
+group = "io.github.rolodophone"
+version = "0.1.0"
 
-val applicationMainClass = "TemplateProgramKt"
+val applicationMainClass = "MainKt"
 
 /**  ## additional ORX features to be added to this project */
 val orxFeatures = setOf<String>(
