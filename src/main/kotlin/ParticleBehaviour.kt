@@ -22,16 +22,16 @@ sealed class ParticleBehaviour {
 
 		override fun update(particle: Particle) {
 			//friction
-			vel.scale(0.997)
+			vel.scale(0.96)
 
 			//acceleration from simplex noise
 			vel.add(MutableVector(gradient3D(
 				noise = simplex4D,
 				seed = 0,
-				x = 0.0005*particle.pos.x,
-				y = 0.0005*particle.pos.y,
-				z = 0.005*program.frameCount.toDouble()
-			).xy) * 0.01)
+				x = 0.005*particle.pos.x,
+				y = 0.005*particle.pos.y,
+				z = 0.05*program.frameCount.toDouble()
+			).xy) * 0.1)
 
 			//bounce back to the screen
 			when {
@@ -48,7 +48,7 @@ sealed class ParticleBehaviour {
 //			particle.pos.add((1-velScale)*prevVel.x, (1-velScale)*prevVel.y)
 
 			//gravity
-			vel.add((avgPos - particle.pos) * 0.00002)
+			vel.add((avgPos - particle.pos) * 0.0000)
 
 			particle.pos.add(vel)
 
