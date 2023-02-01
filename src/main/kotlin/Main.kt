@@ -1,11 +1,6 @@
 import org.openrndr.Fullscreen
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.extra.compositor.compose
-import org.openrndr.extra.compositor.draw
-import org.openrndr.extra.compositor.layer
-import org.openrndr.extra.noclear.NoClear
-import org.openrndr.extra.olive.oliveProgram
 
 /**
  *  This is a template for a live program.
@@ -25,34 +20,14 @@ fun main() = application {
 		fullscreen = Fullscreen.SET_DISPLAY_MODE
 
     }
-    oliveProgram {
-		extend(NoClear().apply {
-			backdrop = {
-				drawer.clear(BG_COLOUR)
-			}
-		})
-
-		val scribbles = Scribbles(this)
-		val bigWords = BigWords(this)
-
-		val composite = compose {
-			layer {
-				scribbles.setup()
-				draw {
-					scribbles.draw()
-				}
-			}
-
-			layer {
-				bigWords.setup()
-				draw {
-					bigWords.draw()
-				}
-			}
-        }
+    program {
+		val nebula = Nebula(this)
+		nebula.setup()
 
 		extend {
-			composite.draw(drawer)
+			nebula.update()
+			drawer.clear(ColorRGBa.BLACK)
+			nebula.draw()
 		}
     }
 }
