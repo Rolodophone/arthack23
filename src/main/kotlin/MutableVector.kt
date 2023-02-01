@@ -1,5 +1,7 @@
 import org.openrndr.math.Vector2
 
+private val tmpVec = MutableVector()
+
 class MutableVector(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
 	constructor(vector2: Vector2) : this(vector2.x, vector2.y)
@@ -57,6 +59,31 @@ class MutableVector(var x: Double, var y: Double) {
 	fun neg() {
 		x = -x
 		y = -y
+	}
+
+	operator fun plus(other: MutableVector): MutableVector {
+		tmpVec.set(x + other.x, y + other.y)
+		return tmpVec
+	}
+
+	operator fun minus(other: MutableVector): MutableVector {
+		tmpVec.set(x - other.x, y - other.y)
+		return tmpVec
+	}
+
+	operator fun times(scalar: Double): MutableVector {
+		tmpVec.set(x * scalar, y * scalar)
+		return tmpVec
+	}
+
+	operator fun div(scalar: Double): MutableVector {
+		tmpVec.set(x / scalar, y / scalar)
+		return tmpVec
+	}
+
+	operator fun unaryMinus(): MutableVector {
+		tmpVec.set(-x, -y)
+		return tmpVec
 	}
 
 	override fun toString() = "($x, $y)"

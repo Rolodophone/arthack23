@@ -14,23 +14,46 @@ sealed class ParticleBehaviour {
 	}
 
 	class Murmur(private val program: Program) : ParticleBehaviour() {
+		companion object {
+			val avgPos = MutableVector()
+		}
+
 		val vel = MutableVector(0.0, 0.0)
 
 		override fun update(particle: Particle) {
-			//acceleration from simplex noise
-			val acc = MutableVector(gradient3D(
-				simplex4D, 0,
-				0.00001*particle.pos.x, 0.0005*particle.pos.y,
-				0.00001*program.frameCount.toDouble()
-			).xy)
-			acc.scale(0.01)
-			vel.add(acc)
+			//friction
+			vel.scale(0.997)
 
-			//acceleration for returning to centre
-			vel.add(0.0001 * (program.width/2.0 - particle.pos.x),
-					0.0001 * (program.height/2.0 - particle.pos.y))
+			//acceleration from simplex noise
+			vel.add(MutableVector(gradient3D(
+				noise = simplex4D,
+				seed = 0,
+				x = 0.0005*particle.pos.x,
+				y = 0.0005*particle.pos.y,
+				z = 0.005*program.frameCount.toDouble()
+			).xy) * 0.01)
+
+			//bounce back to the screen
+			when {
+				particle.pos.x > program.width + 100
+						|| particle.pos.x < -100 -> vel.x = -vel.x
+				particle.pos.y > program.height + 100
+						|| particle.pos.y < -100 -> vel.y = -vel.y
+			}
+
+//			val velScale =
+//				if (program.frameCount >= frameVelLastChanged + 100) 1.0
+//				else 0.01 * (program.frameCount - frameVelLastChanged)
+//			particle.pos.add(velScale*vel.x, velScale*vel.y)
+//			particle.pos.add((1-velScale)*prevVel.x, (1-velScale)*prevVel.y)
+
+			//gravity
+			vel.add((avgPos - particle.pos) * 0.00002)
 
 			particle.pos.add(vel)
+
+//			//update average
+//			avgPos.add(vel * 0.0001)
 		}
 	}
 }

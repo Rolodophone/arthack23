@@ -5,6 +5,17 @@ class Nebula(private val program: Program) {
 	private val particles = mutableListOf<Particle>()
 
 	fun setup() {
+//		repeat(10000) {
+//			val newParticle = Particle(
+//				Random.double0(program.width.toDouble()),
+//				Random.double0(program.height.toDouble()))
+//			val behaviour = ParticleBehaviour.Murmur(program)
+//			newParticle.behaviour = behaviour
+//			particles.add(newParticle)
+//		}
+//		ParticleBehaviour.Murmur.avgPos.set(
+//			particles.map { it.pos.x }.average(),
+//			particles.map { it.pos.y }.average())
 	}
 
 	fun update() {
@@ -28,11 +39,13 @@ class Nebula(private val program: Program) {
 					particles.add(newParticle)
 				}
 			}
-			400 -> {
-			}
 		}
 
 		particles.forEach { it.update() }
+
+		//update average
+		ParticleBehaviour.Murmur.avgPos.set(
+			particles.fold(MutableVector(0.0, 0.0)) { acc, particle -> acc + particle.pos } / particles.size.toDouble())
 	}
 
 	fun draw() {
