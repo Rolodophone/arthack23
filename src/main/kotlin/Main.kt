@@ -1,12 +1,11 @@
 import org.openrndr.Fullscreen
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
+import org.openrndr.extra.compositor.compose
+import org.openrndr.extra.compositor.draw
+import org.openrndr.extra.compositor.layer
 import org.openrndr.extra.noclear.NoClear
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.random.Random.Default.nextDouble
-import kotlin.random.Random.Default.nextInt
+import org.openrndr.extra.olive.oliveProgram
 
 /**
  *  This is a template for a live program.
@@ -15,8 +14,9 @@ import kotlin.random.Random.Default.nextInt
  *  oliveProgram {} can be changed while the program is running.
  */
 
-val turtles = mutableListOf<DoubleArray>() //x, y, direction, rate of change of direction
 //val points = mutableListOf<Vector2>()
+
+val BG_COLOUR = ColorRGBa.fromHex("C6C5B9")
 
 fun main() = application {
     configure {
@@ -25,47 +25,34 @@ fun main() = application {
 		fullscreen = Fullscreen.SET_DISPLAY_MODE
 
     }
-    program {
-		drawer.clear(ColorRGBa.WHITE)
+    oliveProgram {
+		extend(NoClear().apply {
+			backdrop = {
+				drawer.clear(BG_COLOUR)
+			}
+		})
 
-		extend(NoClear())
+		val scribbles = Scribbles(this)
+		val bigWords = BigWords(this)
 
-        extend {
-			//-----UPDATE-----
-			
-			for (turtle in turtles) {
-				//add points to list
-				//points.add(Vector2(turtle[0], turtle[1]))
-
-				//move turtles
-				turtle[0] += cos(turtle[2])
-				turtle[1] -= sin(turtle[2])
-				turtle[2] += turtle[3]
-				
-				//alter rate of change of direction
-				turtle[3] += if (turtle[3] < -0.03) 0.01 * nextDouble()
-						else if (turtle[3] > 0.03) -0.01 * nextDouble()
-						else -0.005 + 0.01 * nextDouble()
+		val composite = compose {
+			layer {
+				scribbles.setup()
+				draw {
+					scribbles.draw()
+				}
 			}
 
-			//generate turtles at edge of screen
-			turtles.add(
-				when (nextInt(4)) {
-					0 -> doubleArrayOf(0.0, nextInt(height).toDouble(), 0.0, 0.0)
-					1 -> doubleArrayOf(width.toDouble(), nextInt(height).toDouble(), PI, 0.0)
-					2 -> doubleArrayOf(nextInt(width).toDouble(), 0.0, -PI/2, 0.0)
-					else -> doubleArrayOf(nextInt(width).toDouble(), height.toDouble(), PI/2, 0.0)
-				}
-			)
-
-
-			//-----DRAW-----
-			drawer.fill = ColorRGBa.GREEN
-			drawer.points {
-				for (turtle in turtles) {
-					point(turtle[0], turtle[1])
+			layer {
+				bigWords.setup()
+				draw {
+					bigWords.draw()
 				}
 			}
         }
+
+		extend {
+			composite.draw(drawer)
+		}
     }
 }
