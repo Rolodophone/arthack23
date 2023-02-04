@@ -40,7 +40,7 @@ sealed class ParticleBehaviour {
 			for (particle in particles) {
 				val gridX = (particle.pos.x / program.width * GRID_ONSCREEN_WIDTH + GRID_OFFSCREEN_MARGIN).toInt()
 				val gridY = (particle.pos.y / program.height * GRID_ONSCREEN_HEIGHT + GRID_OFFSCREEN_MARGIN).toInt()
-				if (gridX < 0 || gridX >= GRID_ONSCREEN_WIDTH || gridY < 0 || gridY >= GRID_ONSCREEN_HEIGHT) continue
+				if (gridX < 0 || gridX >= GRID_TOTAL_WIDTH || gridY < 0 || gridY >= GRID_TOTAL_HEIGHT) continue
 				particleGrid[gridY][gridX].add(particle)
 			}
 		}
@@ -88,7 +88,7 @@ sealed class ParticleBehaviour {
 			//repulsion from nearby particles
 			val gridX = (particle.pos.x / program.width * GRID_ONSCREEN_WIDTH + GRID_OFFSCREEN_MARGIN).toInt()
 			val gridY = (particle.pos.y / program.height * GRID_ONSCREEN_HEIGHT + GRID_OFFSCREEN_MARGIN).toInt()
-			if (gridX in 0 until GRID_ONSCREEN_WIDTH && gridY in 0 until GRID_ONSCREEN_HEIGHT) {
+			if (gridX in 0 until GRID_TOTAL_WIDTH && gridY in 0 until GRID_TOTAL_HEIGHT) {
 				for (nearbyParticle in particleGrid[gridY][gridX]) {
 					val s = nearbyParticle.pos - particle.pos
 					particle.vel.add(s * -repulsionWeight)
@@ -96,6 +96,18 @@ sealed class ParticleBehaviour {
 			}
 
 			particle.pos.add(particle.vel * totalVelWeight)
+		}
+	}
+
+	class TempLine(private val program: Program) : ParticleBehaviour() {
+		override fun updateParticle(particle: Particle) {
+			if (particle.pos.x < program.width / 2) {
+				particle.vel.x += 0.1
+			} else {
+				particle.vel.x -= 0.1
+			}
+
+			particle.pos.add(particle.vel)
 		}
 	}
 }
