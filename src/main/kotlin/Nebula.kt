@@ -6,15 +6,6 @@ class Nebula(private val program: Program) {
 	private var particleBehaviour = ParticleBehaviour.Murmur(program)
 
 	fun setup() {
-//		repeat(10000) {
-//			val newParticle = Particle(
-//				Random.double0(program.width.toDouble()),
-//				Random.double0(program.height.toDouble()))
-//			particles.add(newParticle)
-//		}
-		particleBehaviour.avgPos.set(
-			particles.map { it.pos.x }.average(),
-			particles.map { it.pos.y }.average())
 	}
 
 	fun update() {
