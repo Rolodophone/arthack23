@@ -1,6 +1,9 @@
 import org.openrndr.Program
+import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.FontMap
 import org.openrndr.draw.loadFont
+
+val BG_COLOUR = ColorRGBa.fromHex("C6C5B9")
 
 class BigWords(private val program: Program) {
 	private val drawer = program.drawer
