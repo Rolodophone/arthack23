@@ -3,17 +3,16 @@ import org.openrndr.extra.noise.Random
 
 class Nebula(private val program: Program) {
 	private val particles = mutableListOf<Particle>()
+	private var particleBehaviour = ParticleBehaviour.Murmur(program)
 
 	fun setup() {
 		repeat(10000) {
 			val newParticle = Particle(
 				Random.double0(program.width.toDouble()),
 				Random.double0(program.height.toDouble()))
-			val behaviour = ParticleBehaviour.Murmur(program)
-			newParticle.behaviour = behaviour
 			particles.add(newParticle)
 		}
-		ParticleBehaviour.Murmur.avgPos.set(
+		particleBehaviour.avgPos.set(
 			particles.map { it.pos.x }.average(),
 			particles.map { it.pos.y }.average())
 	}
@@ -41,11 +40,8 @@ class Nebula(private val program: Program) {
 //			}
 //		}
 
-		particles.forEach { it.update() }
-
-		//update average
-		ParticleBehaviour.Murmur.avgPos.set(
-			particles.fold(MutableVector(0.0, 0.0)) { acc, particle -> acc + particle.pos } / particles.size.toDouble())
+		particleBehaviour.update(particles)
+		particles.forEach { particleBehaviour.updateParticle(it) }
 	}
 
 	fun draw() {

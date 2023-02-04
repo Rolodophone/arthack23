@@ -3,12 +3,8 @@ import org.openrndr.draw.PointBatchBuilder
 
 class Particle(x: Double, y: Double) {
 	val pos = MutableVector(x, y)
+	val vel = MutableVector(0.0, 0.0)
 	val colour = ColorRGBa.WHITE
-	lateinit var behaviour: ParticleBehaviour
-
-	fun update() {
-		behaviour.update(this)
-	}
 
 	val draw: PointBatchBuilder.() -> Unit = {
 		fill = colour
