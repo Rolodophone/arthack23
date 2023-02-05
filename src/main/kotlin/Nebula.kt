@@ -7,7 +7,7 @@ class Nebula(private val program: Program) {
 	fun setup() {
 		particleBehaviour.apply {
 			simplexSeed = 0
-			friction = 0.997
+			friction = 1.0
 			simplexScale = 0.01
 			simplexSpeed = 0.01
 			simplexWeight = 0.001
@@ -18,15 +18,15 @@ class Nebula(private val program: Program) {
 
 	fun update() {
 		when (program.frameCount) {
-			in 0..1999 -> {
+			in 0..999 -> {
 				for (i in 0..19) {
-					particles.add(Particle(0.0, program.height / 2.0 - 40 + 4*i).apply {
-						vel.set(3.0, i/4.0)
+					particles.add(Particle(500.0, program.height / 2.0 - 40 + 4*i).apply {
+						vel.set(4.0, 4 + i/16.0)
 					})
 				}
 				for (i in 0..19) {
-					particles.add(Particle(program.width.toDouble(), program.height / 2.0 - 40 + 4*i).apply {
-						vel.set(-3.0, -i/4.0)
+					particles.add(Particle(program.width - 500.0, program.height / 2.0 - 40 + 4*i).apply {
+						vel.set(-4.0, -4 - i/16.0)
 					})
 				}
 			}
