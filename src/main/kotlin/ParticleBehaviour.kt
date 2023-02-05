@@ -50,13 +50,15 @@ sealed class ParticleBehaviour {
 			particle.vel.scale(friction)
 
 			//acceleration from simplex noise
-			particle.vel.add(MutableVector(gradient3D(
-				noise = simplex4D,
-				seed = simplexSeed,
-				x = simplexScale*particle.pos.x,
-				y = simplexScale*particle.pos.y,
-				z = simplexSpeed*program.frameCount.toDouble()
-			).xy) * simplexWeight)
+			if (simplexWeight != 0.0) {
+				particle.vel.add(MutableVector(gradient3D(
+					noise = simplex4D,
+					seed = simplexSeed,
+					x = simplexScale * particle.pos.x,
+					y = simplexScale * particle.pos.y,
+					z = simplexSpeed * program.frameCount.toDouble()
+				).xy) * simplexWeight)
+			}
 
 			//avoid going offscreen
 			when {
@@ -86,12 +88,14 @@ sealed class ParticleBehaviour {
 			particle.vel.add((avgPos - particle.pos) * gravityWeight)
 
 			//repulsion from nearby particles
-			val gridX = (particle.pos.x / program.width * GRID_ONSCREEN_WIDTH + GRID_OFFSCREEN_MARGIN).toInt()
-			val gridY = (particle.pos.y / program.height * GRID_ONSCREEN_HEIGHT + GRID_OFFSCREEN_MARGIN).toInt()
-			if (gridX in 0 until GRID_TOTAL_WIDTH && gridY in 0 until GRID_TOTAL_HEIGHT) {
-				for (nearbyParticle in particleGrid[gridY][gridX]) {
-					val s = nearbyParticle.pos - particle.pos
-					particle.vel.add(s * -repulsionWeight)
+			if (repulsionWeight != 0.0) {
+				val gridX = (particle.pos.x / program.width * GRID_ONSCREEN_WIDTH + GRID_OFFSCREEN_MARGIN).toInt()
+				val gridY = (particle.pos.y / program.height * GRID_ONSCREEN_HEIGHT + GRID_OFFSCREEN_MARGIN).toInt()
+				if (gridX in 0 until GRID_TOTAL_WIDTH && gridY in 0 until GRID_TOTAL_HEIGHT) {
+					for (nearbyParticle in particleGrid[gridY][gridX]) {
+						val s = nearbyParticle.pos - particle.pos
+						particle.vel.add(s * -repulsionWeight)
+					}
 				}
 			}
 

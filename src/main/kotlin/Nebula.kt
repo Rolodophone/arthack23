@@ -1,50 +1,33 @@
 import org.openrndr.Program
-import org.openrndr.extra.noise.Random
 
 class Nebula(private val program: Program) {
 	private val particles = mutableListOf<Particle>()
-	private var particleBehaviour: ParticleBehaviour = ParticleBehaviour.Murmur(program)
+	private var particleBehaviour = ParticleBehaviour.Murmur(program)
 
 	fun setup() {
+		particleBehaviour.apply {
+			simplexSeed = 0
+			friction = 0.997
+			simplexScale = 0.01
+			simplexSpeed = 0.01
+			simplexWeight = 0.001
+			repulsionWeight = 0.0
+			gravityWeight = 0.0002
+		}
 	}
 
 	fun update() {
 		when (program.frameCount) {
-			in 0..399 -> {
-				repeat(10) {
-					val variance = Random.double()
-					val newParticle = Particle(0.0, program.height/2.0 + 200*variance)
-					newParticle.vel.set(3.0, 3*variance)
-					particles.add(newParticle)
+			in 0..1999 -> {
+				for (i in 0..19) {
+					particles.add(Particle(0.0, program.height / 2.0 - 40 + 4*i).apply {
+						vel.set(3.0, i/4.0)
+					})
 				}
-				repeat(10) {
-					val variance = Random.double()
-					val newParticle = Particle(program.width.toDouble(),
-							program.height/2.0 + 200*variance)
-					newParticle.vel.set(-3.0, 3*variance)
-					particles.add(newParticle)
-				}
-			}
-			500 -> { //tube
-				particleBehaviour = ParticleBehaviour.TempLine(program)
-			}
-			1000 -> { //random noise
-				particleBehaviour = ParticleBehaviour.Murmur(program).apply {
-					repulsionWeight = 0.01
-				}
-			}
-			1500 -> {
-				(particleBehaviour as ParticleBehaviour.Murmur).apply {
-					repulsionWeight = 0.01
-					friction = 0.9
-				}
-			}
-			2000 -> {
-				(particleBehaviour as ParticleBehaviour.Murmur).apply {
-					friction = 0.99
-					repulsionWeight = 0.0
-					simplexSpeed = 0.05
-					simplexWeight = 0.1
+				for (i in 0..19) {
+					particles.add(Particle(program.width.toDouble(), program.height / 2.0 - 40 + 4*i).apply {
+						vel.set(-3.0, -i/4.0)
+					})
 				}
 			}
 		}
