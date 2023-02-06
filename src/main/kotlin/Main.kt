@@ -19,6 +19,7 @@ fun main() = application {
 			nebula.update()
 			drawer.clear(ColorRGBa.BLACK)
 			nebula.draw()
+			devTools.drawDebugInfo()
 		}
     }
 }
