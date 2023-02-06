@@ -1,8 +1,9 @@
 import org.openrndr.Program
 
 class Nebula(private val program: Program) {
-	private val particles = mutableListOf<Particle>()
-	private var particleBehaviour = ParticleBehaviour.Murmur(program)
+	val particles = mutableListOf<Particle>()
+	var particleBehaviour = ParticleBehaviour.Murmur(program)
+	var frameNumber = 0
 
 	fun setup() {
 		particleBehaviour.apply {
@@ -17,7 +18,7 @@ class Nebula(private val program: Program) {
 	}
 
 	fun update() {
-		when (program.frameCount) {
+		when (frameNumber) {
 			in 0..999 -> {
 				for (i in 0..19) {
 					particles.add(Particle(500.0, program.height / 2.0 - 40 + 4*i).apply {
@@ -33,7 +34,9 @@ class Nebula(private val program: Program) {
 		}
 
 		particleBehaviour.update(particles)
-		particles.forEach { particleBehaviour.updateParticle(it) }
+		particles.forEach { particleBehaviour.updateParticle(it, frameNumber) }
+
+		frameNumber++
 	}
 
 	fun draw() {

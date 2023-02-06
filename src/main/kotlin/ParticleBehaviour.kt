@@ -5,7 +5,7 @@ import kotlin.math.absoluteValue
 
 sealed class ParticleBehaviour {
 	open fun update(particles: List<Particle>) {}
-	open fun updateParticle(particle: Particle) {}
+	open fun updateParticle(particle: Particle, frameNumber: Int) {}
 
 	class Murmur(private val program: Program) : ParticleBehaviour() {
 		companion object {
@@ -45,7 +45,7 @@ sealed class ParticleBehaviour {
 			}
 		}
 
-		override fun updateParticle(particle: Particle) {
+		override fun updateParticle(particle: Particle, frameNumber: Int) {
 			//friction
 			particle.vel.scale(friction)
 
@@ -56,7 +56,7 @@ sealed class ParticleBehaviour {
 					seed = simplexSeed,
 					x = simplexScale * particle.pos.x,
 					y = simplexScale * particle.pos.y,
-					z = simplexSpeed * program.frameCount.toDouble()
+					z = simplexSpeed * frameNumber.toDouble()
 				).xy) * simplexWeight)
 			}
 
@@ -100,18 +100,6 @@ sealed class ParticleBehaviour {
 			}
 
 			particle.pos.add(particle.vel * totalVelWeight)
-		}
-	}
-
-	class TempLine(private val program: Program) : ParticleBehaviour() {
-		override fun updateParticle(particle: Particle) {
-			if (particle.pos.x < program.width / 2) {
-				particle.vel.x += 0.1
-			} else {
-				particle.vel.x -= 0.1
-			}
-
-			particle.pos.add(particle.vel)
 		}
 	}
 }

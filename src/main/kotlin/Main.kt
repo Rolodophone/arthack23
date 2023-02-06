@@ -12,6 +12,9 @@ fun main() = application {
 		val nebula = Nebula(this)
 		nebula.setup()
 
+		val devTools = DevTools(this, nebula)
+		keyboard.keyDown.listen(devTools::listen)
+
 		extend {
 			nebula.update()
 			drawer.clear(ColorRGBa.BLACK)
