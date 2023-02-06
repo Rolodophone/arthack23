@@ -27,17 +27,19 @@ class DevTools(private val program: Program,
 			//background
 			fill = ColorRGBa.BLACK.opacify(0.5)
 			stroke = null
-			rectangle(0.0, 0.0, 210.0, 190.0)
+			rectangle(0.0, 0.0, 210.0, 220.0)
 
 			fill = ColorRGBa.WHITE
 			text("frameNumber: ${nebula.frameNumber}", 20.0, 20.0)
-			text("simplexSeed: ${nebula.particleBehaviour.simplexSeed}", 20.0, 40.0)
 			text("friction: ${nebula.particleBehaviour.friction}", 20.0, 60.0)
+			text("simplexSeed: ${nebula.particleBehaviour.simplexSeed}", 20.0, 40.0)
 			text("simplexScale: ${nebula.particleBehaviour.simplexScale}", 20.0, 80.0)
 			text("simplexSpeed: ${nebula.particleBehaviour.simplexSpeed}", 20.0, 100.0)
 			text("simplexWeight: ${nebula.particleBehaviour.simplexWeight}", 20.0, 120.0)
-			text("repulsionWeight: ${nebula.particleBehaviour.repulsionWeight}", 20.0, 140.0)
+			text("nearScreenEdgeAccel: ${nebula.particleBehaviour.nearScreenEdgeAccel}", 20.0, 140.0)
 			text("gravityWeight: ${nebula.particleBehaviour.gravityWeight}", 20.0, 160.0)
+			text("repulsionWeight: ${nebula.particleBehaviour.repulsionWeight}", 20.0, 180.0)
+			text("totalVelWeight: ${nebula.particleBehaviour.totalVelWeight}", 20.0, 200.0)
 		}
 	}
 }
