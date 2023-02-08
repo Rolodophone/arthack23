@@ -4,6 +4,8 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
 
+private const val ENABLED = false
+
 class DevTools(private val program: Program,
 			   private val nebula: Nebula) {
 
@@ -25,7 +27,7 @@ class DevTools(private val program: Program,
 	}
 
 	fun drawDebugInfo() {
-		program.drawer.apply {
+		if (ENABLED) program.drawer.apply {
 			//debug text background
 			fill = ColorRGBa.BLACK.opacify(0.5)
 			stroke = null
@@ -69,7 +71,7 @@ class DevTools(private val program: Program,
 			//draw projected point
 			stroke = null
 			fill = ColorRGBa.RED
-			circle(nebula.particleBehaviour.contour.nearest(program.mouse.position).position, 5.0)
+			circle(nebula.particleBehaviour.contour.nearestPatch(program.mouse.position).position, 5.0)
 		}
 	}
 }

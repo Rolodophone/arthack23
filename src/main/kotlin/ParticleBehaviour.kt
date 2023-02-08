@@ -38,9 +38,9 @@ sealed class ParticleBehaviour {
 			curveTo(program.width/2.0 - 750.0, program.height/2.0 - 1000.0,
 				    program.width/2.0 + 750.0, program.height/2.0 + 1000.0,
 				    program.width/2.0 + 750.0, program.height/2.0)
-//			curveTo(program.width/2.0 + 750.0, program.height/2.0 - 1000.0,
-//				    program.width/2.0 - 750.0, program.height/2.0 + 1000.0,
-//				    program.width/2.0 - 750.0, program.height/2.0)
+			curveTo(program.width/2.0 + 750.0, program.height/2.0 - 1000.0,
+				    program.width/2.0 - 750.0, program.height/2.0 + 1000.0,
+				    program.width/2.0 - 750.0, program.height/2.0)
 		}
 
 		override fun update(particles: List<Particle>) {
@@ -114,7 +114,7 @@ sealed class ParticleBehaviour {
 
 			//attraction to contour
 			if (contourAttraction != 0.0) {
-				val s = contour.nearest(particle.pos.toVector2()).position - particle.pos
+				val s = contour.nearestPatch(particle.pos.toVector2()).position - particle.pos
 				particle.vel.add(s * contourAttraction)
 			}
 
