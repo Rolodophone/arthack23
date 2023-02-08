@@ -1,4 +1,5 @@
 import org.openrndr.math.Vector2
+import kotlin.math.sqrt
 
 private val tmpVec = MutableVector()
 
@@ -61,7 +62,7 @@ class MutableVector(var x: Double, var y: Double) {
 		y = -y
 	}
 
-	fun mag() = Math.sqrt(x*x + y*y)
+	fun mag() = sqrt(x*x + y*y)
 
 	fun magSq() = x*x + y*y
 
