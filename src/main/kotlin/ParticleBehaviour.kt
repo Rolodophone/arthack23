@@ -1,6 +1,7 @@
 import org.openrndr.Program
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
+import org.openrndr.shape.contour
 import kotlin.math.absoluteValue
 
 sealed class ParticleBehaviour {
@@ -28,7 +29,19 @@ sealed class ParticleBehaviour {
 		var nearScreenEdgeAccel = 0.05
 		var gravityWeight = 0.00002
 		var repulsionWeight = 0.0001
+		var contourAttraction = 0.02
+		var contourAccel = 0.0
 		var totalVelWeight = 1.0
+
+		var contour = contour {
+			moveTo(program.width/2.0 - 750.0, program.height/2.0)
+			curveTo(program.width/2.0 - 750.0, program.height/2.0 - 1000.0,
+				    program.width/2.0 + 750.0, program.height/2.0 + 1000.0,
+				    program.width/2.0 + 750.0, program.height/2.0)
+			curveTo(program.width/2.0 + 750.0, program.height/2.0 - 1000.0,
+				    program.width/2.0 - 750.0, program.height/2.0 + 1000.0,
+				    program.width/2.0 - 750.0, program.height/2.0)
+		}
 
 		override fun update(particles: List<Particle>) {
 			//update average
@@ -97,6 +110,21 @@ sealed class ParticleBehaviour {
 						particle.vel.add(s * -repulsionWeight)
 					}
 				}
+			}
+
+			//attraction to contour
+			if (contourAttraction != 0.0) {
+				val s = contour.nearest(particle.pos.toVector2()).position - particle.pos
+				particle.vel.add(s * contourAttraction)
+			}
+
+			//acceleration from contour
+			if (contourAccel != 0.0) {
+				val s = contour.nearest(particle.pos.toVector2()).position - particle.pos
+				s.normalize()
+				if (s.x < 0) s.rotate90()
+				else s.rotate270()
+				particle.vel.add(s * contourAccel)
 			}
 
 			particle.pos.add(particle.vel * totalVelWeight)

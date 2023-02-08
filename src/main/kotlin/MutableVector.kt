@@ -61,6 +61,28 @@ class MutableVector(var x: Double, var y: Double) {
 		y = -y
 	}
 
+	fun mag() = Math.sqrt(x*x + y*y)
+
+	fun magSq() = x*x + y*y
+
+	fun normalize() {
+		val mag = mag()
+		x /= mag
+		y /= mag
+	}
+
+	fun rotate90() {
+		val tmp = x
+		x = -y
+		y = tmp
+	}
+
+	fun rotate270() {
+		val tmp = x
+		x = y
+		y = -tmp
+	}
+
 	operator fun plus(other: MutableVector): MutableVector {
 		tmpVec.set(x + other.x, y + other.y)
 		return tmpVec
@@ -87,4 +109,11 @@ class MutableVector(var x: Double, var y: Double) {
 	}
 
 	override fun toString() = "($x, $y)"
+
+	fun toVector2() = Vector2(x, y)
+}
+
+operator fun Vector2.minus(other: MutableVector): MutableVector {
+	tmpVec.set(x - other.x, y - other.y)
+	return tmpVec
 }
