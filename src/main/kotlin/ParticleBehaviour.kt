@@ -1,7 +1,7 @@
 import org.openrndr.Program
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
-import org.openrndr.shape.contour
+import org.openrndr.shape.Circle
 import kotlin.math.absoluteValue
 
 sealed class ParticleBehaviour {
@@ -21,7 +21,7 @@ sealed class ParticleBehaviour {
 		private val avgPos = MutableVector()
 		private val particleGrid = Array(GRID_TOTAL_HEIGHT) { Array(GRID_TOTAL_WIDTH) { mutableListOf<Particle>() } }
 
-		var friction = 0.997
+		var friction = 0.8
 		var simplexSeed = 0
 		var simplexScale = 0.005
 		var simplexSpeed = 0.005
@@ -29,19 +29,11 @@ sealed class ParticleBehaviour {
 		var nearScreenEdgeAccel = 0.05
 		var gravityWeight = 0.00002
 		var repulsionWeight = 0.0001
-		var contourAttraction = 0.02
-		var contourAccel = 0.05
+		var contourAttraction = 0.01
+		var contourAccel = 0.2
 		var totalVelWeight = 1.0
 
-		var contour = contour {
-			moveTo(program.width/2.0 - 750.0, program.height/2.0)
-			curveTo(program.width/2.0 - 750.0, program.height/2.0 - 1000.0,
-				    program.width/2.0 + 750.0, program.height/2.0 + 1000.0,
-				    program.width/2.0 + 750.0, program.height/2.0)
-			curveTo(program.width/2.0 + 750.0, program.height/2.0 - 1000.0,
-				    program.width/2.0 - 750.0, program.height/2.0 + 1000.0,
-				    program.width/2.0 - 750.0, program.height/2.0)
-		}
+		var contour = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
 
 		override fun update(particles: List<Particle>) {
 			//update average
