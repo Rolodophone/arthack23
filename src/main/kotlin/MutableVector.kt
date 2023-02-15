@@ -89,7 +89,17 @@ class MutableVector(var x: Double, var y: Double) {
 		return tmpVec
 	}
 
+	operator fun plus(other: Vector2): MutableVector {
+		tmpVec.set(x + other.x, y + other.y)
+		return tmpVec
+	}
+
 	operator fun minus(other: MutableVector): MutableVector {
+		tmpVec.set(x - other.x, y - other.y)
+		return tmpVec
+	}
+
+	operator fun minus(other: Vector2): MutableVector {
 		tmpVec.set(x - other.x, y - other.y)
 		return tmpVec
 	}

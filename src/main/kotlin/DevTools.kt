@@ -64,14 +64,16 @@ class DevTools(private val program: Program,
 			lineSegment(program.mouse.position + gradient * 10.0,
 						program.mouse.position + gradient * 10.0 + gradient.rotate(215.0) * 4.0)
 
-			//draw contour
-			stroke = ColorRGBa.WHITE
-			contour(nebula.particleBehaviour.contour)
+			nebula.particleBehaviour.contour?.let { contour ->
+				//draw contour
+				stroke = ColorRGBa.WHITE
+				contour(contour)
 
-			//draw projected point
-			stroke = null
-			fill = ColorRGBa.RED
-			circle(nebula.particleBehaviour.contour.nearestPatch(program.mouse.position).position, 5.0)
+				//draw projected point
+				stroke = null
+				fill = ColorRGBa.RED
+				circle(contour.nearestPatch(program.mouse.position).position, 5.0)
+			}
 		}
 	}
 }

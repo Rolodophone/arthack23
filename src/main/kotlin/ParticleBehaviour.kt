@@ -2,6 +2,7 @@ import org.openrndr.Program
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
 import org.openrndr.shape.Circle
+import org.openrndr.shape.ShapeContour
 import kotlin.math.absoluteValue
 
 sealed class ParticleBehaviour {
@@ -33,7 +34,7 @@ sealed class ParticleBehaviour {
 		var contourAccel = 0.2
 		var totalVelWeight = 1.0
 
-		var contour = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
+		var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
 
 		override fun update(particles: List<Particle>) {
 			//update average
@@ -104,17 +105,19 @@ sealed class ParticleBehaviour {
 				}
 			}
 
-			//attraction to contour
-			if (contourAttraction != 0.0) {
-				val s = contour.nearestPatch(particle.pos.toVector2()).position - particle.pos
-				particle.vel.add(s * contourAttraction)
-			}
+			contour?.let { contour ->
+				//attraction to contour
+				if (contourAttraction != 0.0) {
+					val s = contour.nearestPatch(particle.pos.toVector2()).position - particle.pos
+					particle.vel.add(s * contourAttraction)
+				}
 
-			//acceleration from contour
-			if (contourAccel != 0.0) {
-				val nearestPoint = contour.nearest(particle.pos.toVector2())
-				val v = nearestPoint.segment.derivative(nearestPoint.segmentT).normalized
-				particle.vel.add(v * contourAccel)
+				//acceleration from contour
+				if (contourAccel != 0.0) {
+					val nearestPoint = contour.nearest(particle.pos.toVector2())
+					val v = nearestPoint.segment.derivative(nearestPoint.segmentT).normalized
+					particle.vel.add(v * contourAccel)
+				}
 			}
 
 			particle.pos.add(particle.vel * totalVelWeight)
