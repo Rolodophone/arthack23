@@ -4,7 +4,7 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
 
-private const val ENABLED = false
+private const val ENABLED = true
 
 class DevTools(private val program: Program,
 			   private val nebula: Nebula) {
