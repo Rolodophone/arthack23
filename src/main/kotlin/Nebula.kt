@@ -14,70 +14,49 @@ class Nebula(private val program: Program) {
     var imageShadow = image.shadow.apply { download() }
 
 	fun setup() {
-		mainGroup.apply {
-			friction = 0.99
-			simplexSeed = 0
-			simplexScale = 0.005
-			simplexSpeed = 0.005
-			simplexWeight = 0.002
-			nearScreenEdgeAccel = 0.01
-			gravityWeight = 0.0
-			repulsionWeight = 0.00001
-			contourAttraction = 0.0
-            contourAttractionReach = 100.0
-            contourAttractionNormalised = true
-			contourAccel = 0.0
-			totalVelWeight = 1.0
-            contour = null
-
-            repeat(5000) {
-                particles.add(Particle(Random.double0(program.width.toDouble()),
-                                       Random.double0(program.height.toDouble())))
-            }
-		}
-
-        auxiliaryGroup.apply {
-            friction = 0.99
-            simplexSeed = 1
-            simplexScale = 0.005
-            simplexSpeed = 0.005
-            simplexWeight = 0.0001
-            nearScreenEdgeAccel = 0.0
-            gravityWeight = 0.0
-            repulsionWeight = 0.0
-            contourAttraction = 0.0
-            contourAttractionReach = 100.0
-            contourAttractionNormalised = true
-            contourAccel = 0.0
-            totalVelWeight = 1.0
-            contour = contour {
-                moveTo(188.89800000000002,874.854,)
-                curveTo(188.59000000000003,834.044,191.40050000000002,800.9340000000001,196.7905,773.984,)
-                curveTo(213.9615,688.5140000000001,285.148,610.359,269.5555,525.274,)
-                curveTo(265.744,504.48400000000004,235.56,495.629,231.47899999999998,474.83900000000006,)
-                curveTo(220.8145,421.32400000000007,254.579,367.8090000000001,272.63550000000004,316.21899999999994,)
-                curveTo(286.80350000000004,275.794,297.237,231.59600000000003,325.11100000000005,199.0635,)
-                curveTo(354.60200000000003,164.56749999999997,395.64300000000003,137.0785,439.148,124.951,)
-                curveTo(476.108,114.8255,521.5380000000001,108.1265,553.493,129.07049999999995,)
-                curveTo(571.5880000000001,140.967,575.053,166.99300000000002,581.2130000000001,187.7445,)
-                curveTo(586.218,204.338,581.2130000000001,223.511,588.528,239.18050000000002,)
-                curveTo(595.843,254.619,628.183,260.779,623.5630000000001,277.33399999999995,)
-                curveTo(621.638,284.649,607.008,277.71899999999994,602.003,283.494,)
-                curveTo(588.143,299.279,605.468,329.30899999999997,592.763,346.249,)
-                curveTo(577.363,366.269,531.1630000000001,353.5640000000001,523.8480000000001,377.4340000000001,)
-                curveTo(503.443,441.34400000000005,567.353,517.5740000000001,625.488,551.069,)
-                curveTo(651.283,565.6990000000001,685.548,557.229,714.423,551.069,)
-                curveTo(792.578,534.5140000000001,920.783,430.94900000000007,933.103,455.20399999999995,)
-                curveTo(939.263,467.1390000000001,904.228,474.83900000000006,909.618,487.159,)
-                curveTo(919.628,511.029,985.078,471.374,986.6180000000002,497.554,)
-                curveTo(988.928,535.284,911.158,509.48900000000003,876.508,525.274,)
-                curveTo(825.6880000000001,548.374,781.028,589.1840000000001,738.678,621.524,)
-                curveTo(693.633,655.7890000000001,646.6630000000001,653.094,599.693,647.704,)
-                curveTo(575.053,644.624,531.548,616.904,531.548,616.904,)
-                lineTo(456.47300000000007,805.169,)
-                curveTo(456.47300000000007,805.169,602.003,787.844,739.8330000000001,876.779,)
-            }
+        mainGroup.resetParameters(
+            friction = 0.99,
+            randomAccel = 0.1,
+            colorBufferShadow = imageShadow
+        )
+        mainGroup.particles = MutableList(50_000) {
+            Particle(Random.double0(program.width.toDouble()),
+                     Random.double0(program.height.toDouble()))
         }
+
+        auxiliaryGroup.resetParameters(
+            friction = 0.9,
+            contourAttraction = 0.2,
+            contourAccel = 0.1,
+            randomAccel = 1.0,
+            contour = contour {
+                moveTo(188.9, 874.85,)
+                curveTo(188.59, 834.04, 191.4, 800.93, 196.79, 773.98,)
+                curveTo(213.96, 688.51, 285.15, 610.36, 269.56, 525.27,)
+                curveTo(265.74, 504.48, 235.56, 495.63, 231.48, 474.84,)
+                curveTo(220.81, 421.32, 254.58, 367.81, 272.64, 316.22,)
+                curveTo(286.8, 275.79, 297.24, 231.6, 325.11, 199.06,)
+                curveTo(354.6, 164.57, 395.64, 137.08, 439.15, 124.95,)
+                curveTo(476.11, 114.83, 521.54, 108.13, 553.49, 129.07,)
+                curveTo(571.59, 140.97, 575.05, 166.99, 581.21, 187.74,)
+                curveTo(586.22, 204.34, 581.21, 223.51, 588.53, 239.18,)
+                curveTo(595.84, 254.62, 628.18, 260.78, 623.56, 277.33,)
+                curveTo(621.64, 284.65, 607.01, 277.72, 602.0, 283.49,)
+                curveTo(588.14, 299.28, 605.47, 329.31, 592.76, 346.25,)
+                curveTo(577.36, 366.27, 531.16, 353.56, 523.85, 377.43,)
+                curveTo(503.44, 441.34, 567.35, 517.57, 625.49, 551.07,)
+                curveTo(651.28, 565.7, 685.55, 557.23, 714.42, 551.07,)
+                curveTo(792.58, 534.51, 920.78, 430.95, 933.1, 455.2,)
+                curveTo(939.26, 467.14, 904.23, 474.84, 909.62, 487.16,)
+                curveTo(919.63, 511.03, 985.08, 471.37, 986.62, 497.55,)
+                curveTo(988.93, 535.28, 911.16, 509.49, 876.51, 525.27,)
+                curveTo(825.69, 548.37, 781.03, 589.18, 738.68, 621.52,)
+                curveTo(693.63, 655.79, 646.66, 653.09, 599.69, 647.7,)
+                curveTo(575.05, 644.62, 531.55, 616.9, 531.55, 616.9,)
+                lineTo(456.47, 805.17,)
+                curveTo(456.47, 805.17, 602.0, 787.84, 739.83, 876.78,)
+            }
+        )
 	}
 
 	fun update() {
@@ -101,12 +80,12 @@ class Nebula(private val program: Program) {
 
 	fun draw() {
         program.drawer.drawStyle.quality = DrawQuality.PERFORMANCE
-        program.drawer.drawStyle.colorMatrix = Matrix55(0.054, 0.000, 0.000, 0.000, 0.013,
-                                                        0.000, 0.054, 0.000, 0.000, 0.013,
-                                                        0.000, 0.000, 0.054, 0.000, 0.013,
+        program.drawer.drawStyle.colorMatrix = Matrix55(0.248, 0.000, 0.000, 0.000, -0.004,
+                                                        0.000, 0.248, 0.000, 0.000, -0.004,
+                                                        0.000, 0.000, 0.248, 0.000, -0.004,
                                                         0.000, 0.000, 0.000, 1.000, 0.000)
         program.drawer.image(image)
         program.drawer.drawStyle.colorMatrix = Matrix55.IDENTITY
-		particleGroups.forEach { it.draw(imageShadow) }
+		particleGroups.forEach { it.draw() }
 	}
 }

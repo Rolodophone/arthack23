@@ -1,7 +1,10 @@
 import org.openrndr.Program
+import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.ColorBufferShadow
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
+import org.openrndr.extra.noise.uniformRing
+import org.openrndr.math.Vector2
 import org.openrndr.shape.Circle
 import org.openrndr.shape.ShapeContour
 import kotlin.math.absoluteValue
@@ -22,21 +25,58 @@ class ParticleGroup(private val program: Program) {
 
     var particles = mutableListOf<Particle>()
 
-    var friction = 0.8
+    var friction = 1.0
     var simplexSeed = 0
     var simplexScale = 0.005
     var simplexSpeed = 0.005
-    var simplexWeight = 0.01
-    var nearScreenEdgeAccel = 0.05
-    var gravityWeight = 0.00002
-    var repulsionWeight = 0.0001
-    var contourAttraction = 0.01
+    var simplexWeight = 0.0
+    var nearScreenEdgeAccel = 0.0
+    var gravityWeight = 0.0
+    var repulsionWeight = 0.0
+    var contourAttraction = 0.0
     var contourAttractionReach = 20.0
     var contourAttractionNormalised = true
-    var contourAccel = 0.2
+    var contourAccel = 0.0
+    var randomAccel = 0.0
     var totalVelWeight = 1.0
-
     var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
+    var colorBufferShadow: ColorBufferShadow? = null
+
+    fun resetParameters(
+        friction: Double = 1.0,
+        simplexSeed: Int = 0,
+        simplexScale: Double = 0.005,
+        simplexSpeed: Double = 0.005,
+        simplexWeight: Double = 0.0,
+        nearScreenEdgeAccel: Double = 0.0,
+        gravityWeight: Double = 0.0,
+        repulsionWeight: Double = 0.0,
+        contourAttraction: Double = 0.0,
+        contourAttractionReach: Double = 20.0,
+        contourAttractionNormalised: Boolean = true,
+        contourAccel: Double = 0.0,
+        randomAccel: Double = 0.0,
+        totalVelWeight: Double = 1.0,
+        contour: ShapeContour? = null,
+        colorBufferShadow: ColorBufferShadow? = null
+    ) {
+        this.friction = friction
+        this.simplexSeed = simplexSeed
+        this.simplexScale = simplexScale
+        this.simplexSpeed = simplexSpeed
+        this.simplexWeight = simplexWeight
+        this.nearScreenEdgeAccel = nearScreenEdgeAccel
+        this.gravityWeight = gravityWeight
+        this.repulsionWeight = repulsionWeight
+        this.contourAttraction = contourAttraction
+        this.contourAttractionReach = contourAttractionReach
+        this.contourAttractionNormalised = contourAttractionNormalised
+        this.contourAccel = contourAccel
+        this.randomAccel = randomAccel
+        this.totalVelWeight = totalVelWeight
+        this.contour = contour
+        this.colorBufferShadow = colorBufferShadow
+    }
 
     fun update(frameNumber: Int) {
         //update average
@@ -127,12 +167,33 @@ class ParticleGroup(private val program: Program) {
             }
         }
 
+        //random acceleration
+        if (randomAccel != 0.0) {
+            particle.vel.add(Vector2.uniformRing(0.0, randomAccel))
+        }
+
         particle.pos.add(particle.vel * totalVelWeight)
     }
 
-    fun draw(imageShadow: ColorBufferShadow) {
+    fun draw() {
         program.drawer.points {
-            particles.forEach { it.draw(this, imageShadow) }
+            colorBufferShadow.let {colorBufferShadow ->
+                if (colorBufferShadow != null) {
+                    for (particle in particles) {
+                        if     (particle.pos.x >= 0.0 && particle.pos.x < 1920.0 &&
+                                particle.pos.y >= 0.0 && particle.pos.y < 1080.0) {
+                            fill = colorBufferShadow[particle.pos.x.toInt(), particle.pos.y.toInt()]
+                        }
+                        point(particle.pos.x, particle.pos.y)
+                    }
+                }
+                else {
+                    fill = ColorRGBa.WHITE
+                    for (particle in particles) {
+                        point(particle.pos.x, particle.pos.y)
+                    }
+                }
+            }
         }
     }
 }

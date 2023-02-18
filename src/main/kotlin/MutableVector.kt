@@ -68,8 +68,10 @@ class MutableVector(var x: Double, var y: Double) {
 
 	fun normalize() {
 		val mag = mag()
-		x /= mag
-		y /= mag
+        if (mag != 0.0) {
+            x /= mag
+            y /= mag
+        }
 	}
 
 	fun rotate90() {

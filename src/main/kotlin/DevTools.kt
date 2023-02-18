@@ -67,7 +67,7 @@ class DevTools(private val program: Program,
 			lineSegment(program.mouse.position + gradient * 10.0,
 						program.mouse.position + gradient * 10.0 + gradient.rotate(215.0) * 4.0)
 
-			nebula.mainGroup.contour?.let { contour ->
+			nebula.auxiliaryGroup.contour?.let { contour ->
 				//draw contour
 				stroke = ColorRGBa.WHITE
                 fill = null
@@ -76,7 +76,7 @@ class DevTools(private val program: Program,
 				//draw projected point
 				stroke = null
 				fill = ColorRGBa.RED
-				circle(contour.nearestPatch(program.mouse.position).position, 5.0)
+				circle(contour.nearestPatch(program.mouse.position).position, 1.0)
 			}
 		}
 	}
