@@ -41,6 +41,7 @@ class ParticleGroup(private val program: Program) {
     var totalVelWeight = 1.0
     var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
     var colorBufferShadow: ColorBufferShadow? = null
+    var colorOffset = ColorRGBa.TRANSPARENT
 
     fun resetParameters(
         friction: Double = 1.0,
@@ -58,7 +59,8 @@ class ParticleGroup(private val program: Program) {
         randomAccel: Double = 0.0,
         totalVelWeight: Double = 1.0,
         contour: ShapeContour? = null,
-        colorBufferShadow: ColorBufferShadow? = null
+        colorBufferShadow: ColorBufferShadow? = null,
+        colorOffset: ColorRGBa = ColorRGBa.TRANSPARENT
     ) {
         this.friction = friction
         this.simplexSeed = simplexSeed
@@ -76,6 +78,7 @@ class ParticleGroup(private val program: Program) {
         this.totalVelWeight = totalVelWeight
         this.contour = contour
         this.colorBufferShadow = colorBufferShadow
+        this.colorOffset = colorOffset
     }
 
     fun update(frameNumber: Int) {
@@ -182,7 +185,7 @@ class ParticleGroup(private val program: Program) {
                     for (particle in particles) {
                         if     (particle.pos.x >= 0.0 && particle.pos.x < 1920.0 &&
                                 particle.pos.y >= 0.0 && particle.pos.y < 1080.0) {
-                            fill = colorBufferShadow[particle.pos.x.toInt(), particle.pos.y.toInt()]
+                            fill = colorBufferShadow[particle.pos.x.toInt(), particle.pos.y.toInt()] + colorOffset
                         }
                         point(particle.pos.x, particle.pos.y)
                     }

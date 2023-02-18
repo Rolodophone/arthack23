@@ -1,8 +1,6 @@
 import org.openrndr.KeyEvent
 import org.openrndr.Program
 import org.openrndr.color.ColorRGBa
-import org.openrndr.extra.noise.gradient3D
-import org.openrndr.extra.noise.simplex4D
 
 private const val DRAW_DEBUG_INFO = true
 
@@ -36,7 +34,7 @@ class DevTools(private val program: Program,
 			//debug text background
 			fill = ColorRGBa.BLACK.opacify(0.5)
 			stroke = null
-			rectangle(0.0, 0.0, 100.0, 40.0)
+			rectangle(0.0, 0.0, 172.0, 40.0)
 
 			//debug text
 			fill = ColorRGBa.WHITE

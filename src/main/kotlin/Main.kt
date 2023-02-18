@@ -9,7 +9,9 @@ fun main() = application {
 		fullscreen = Fullscreen.SET_DISPLAY_MODE
     }
     program {
-		val nebula = Nebula(this)
+	    val assets = Assets()
+
+		val nebula = Nebula(this, assets)
 		nebula.setup()
 
 		val devTools = DevTools(this, nebula)
