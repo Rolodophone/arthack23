@@ -4,16 +4,16 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
 
-private const val ENABLED = false
+private const val DRAW_DEBUG_INFO = false
 
 class DevTools(private val program: Program,
 			   private val nebula: Nebula) {
 
 	fun listen(keyEvent: KeyEvent) {
 		if (keyEvent.name == "s") {
-			val prevSeed = nebula.particleBehaviour.simplexSeed
+			val prevSeed = nebula.mainGroup.simplexSeed
 			reset()
-			nebula.particleBehaviour.simplexSeed = prevSeed + 1
+			nebula.mainGroup.simplexSeed = prevSeed + 1
 		}
 		else if (keyEvent.name == "r") {
 			reset()
@@ -21,13 +21,15 @@ class DevTools(private val program: Program,
 	}
 
 	private fun reset() {
-		nebula.particles.clear()
+		nebula.particleGroups.clear()
+        nebula.mainGroup.particles.clear()
+        nebula.particleGroups.add(nebula.mainGroup)
 		nebula.setup()
 		nebula.frameNumber = 0
 	}
 
 	fun drawDebugInfo() {
-		if (ENABLED) program.drawer.apply {
+		if (DRAW_DEBUG_INFO) program.drawer.apply {
 			//debug text background
 			fill = ColorRGBa.BLACK.opacify(0.5)
 			stroke = null
@@ -36,25 +38,25 @@ class DevTools(private val program: Program,
 			//debug text
 			fill = ColorRGBa.WHITE
 			text("frameNumber: ${nebula.frameNumber}", 20.0, 20.0)
-			text("friction: ${nebula.particleBehaviour.friction}", 20.0, 60.0)
-			text("simplexSeed: ${nebula.particleBehaviour.simplexSeed}", 20.0, 40.0)
-			text("simplexScale: ${nebula.particleBehaviour.simplexScale}", 20.0, 80.0)
-			text("simplexSpeed: ${nebula.particleBehaviour.simplexSpeed}", 20.0, 100.0)
-			text("simplexWeight: ${nebula.particleBehaviour.simplexWeight}", 20.0, 120.0)
-			text("nearScreenEdgeAccel: ${nebula.particleBehaviour.nearScreenEdgeAccel}", 20.0, 140.0)
-			text("gravityWeight: ${nebula.particleBehaviour.gravityWeight}", 20.0, 160.0)
-			text("repulsionWeight: ${nebula.particleBehaviour.repulsionWeight}", 20.0, 180.0)
-			text("contourAttraction: ${nebula.particleBehaviour.contourAttraction}", 20.0, 200.0)
-			text("contourAccel: ${nebula.particleBehaviour.contourAccel}", 20.0, 220.0)
-			text("totalVelWeight: ${nebula.particleBehaviour.totalVelWeight}", 20.0, 240.0)
+			text("friction: ${nebula.mainGroup.friction}", 20.0, 60.0)
+			text("simplexSeed: ${nebula.mainGroup.simplexSeed}", 20.0, 40.0)
+			text("simplexScale: ${nebula.mainGroup.simplexScale}", 20.0, 80.0)
+			text("simplexSpeed: ${nebula.mainGroup.simplexSpeed}", 20.0, 100.0)
+			text("simplexWeight: ${nebula.mainGroup.simplexWeight}", 20.0, 120.0)
+			text("nearScreenEdgeAccel: ${nebula.mainGroup.nearScreenEdgeAccel}", 20.0, 140.0)
+			text("gravityWeight: ${nebula.mainGroup.gravityWeight}", 20.0, 160.0)
+			text("repulsionWeight: ${nebula.mainGroup.repulsionWeight}", 20.0, 180.0)
+			text("contourAttraction: ${nebula.mainGroup.contourAttraction}", 20.0, 200.0)
+			text("contourAccel: ${nebula.mainGroup.contourAccel}", 20.0, 220.0)
+			text("totalVelWeight: ${nebula.mainGroup.totalVelWeight}", 20.0, 240.0)
 
 			//gradient indicator
 			val gradient = gradient3D(
 				noise = simplex4D,
-				seed = nebula.particleBehaviour.simplexSeed,
-				x = nebula.particleBehaviour.simplexScale * program.mouse.position.x,
-				y = nebula.particleBehaviour.simplexScale * program.mouse.position.y,
-				z = nebula.particleBehaviour.simplexSpeed * nebula.frameNumber.toDouble()
+				seed = nebula.mainGroup.simplexSeed,
+				x = nebula.mainGroup.simplexScale * program.mouse.position.x,
+				y = nebula.mainGroup.simplexScale * program.mouse.position.y,
+				z = nebula.mainGroup.simplexSpeed * nebula.frameNumber.toDouble()
 			).xy
 			stroke = ColorRGBa.WHITE
 			lineSegment(program.mouse.position,
@@ -64,7 +66,7 @@ class DevTools(private val program: Program,
 			lineSegment(program.mouse.position + gradient * 10.0,
 						program.mouse.position + gradient * 10.0 + gradient.rotate(215.0) * 4.0)
 
-			nebula.particleBehaviour.contour?.let { contour ->
+			nebula.mainGroup.contour?.let { contour ->
 				//draw contour
 				stroke = ColorRGBa.WHITE
                 fill = null

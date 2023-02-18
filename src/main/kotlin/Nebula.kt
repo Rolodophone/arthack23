@@ -1,25 +1,19 @@
 import org.openrndr.Program
-import org.openrndr.color.ColorRGBa
-import org.openrndr.draw.BlendMode
 import org.openrndr.draw.DrawQuality
 import org.openrndr.draw.loadImage
-import org.openrndr.draw.tint
 import org.openrndr.extra.noise.Random
-import org.openrndr.extra.noise.uniformRing
 import org.openrndr.math.Matrix55
-import org.openrndr.math.Vector2
-import org.openrndr.shape.LineSegment
 import org.openrndr.shape.contour
 
 class Nebula(private val program: Program) {
-	val particles = mutableListOf<Particle>()
-	var particleBehaviour = ParticleBehaviour.Murmur(program)
+	var mainGroup = ParticleGroup(program)
+    var particleGroups = mutableListOf(mainGroup)
 	var frameNumber = 0
     var image = loadImage("data/images/conversation.png")
     var imageShadow = image.shadow.apply { download() }
 
 	fun setup() {
-		particleBehaviour.apply {
+		mainGroup.apply {
 			friction = 0.99
 			simplexSeed = 0
 			simplexScale = 0.005
@@ -80,9 +74,9 @@ class Nebula(private val program: Program) {
 		when (frameNumber) {
             in 0..10000 -> {
                 repeat(10) {
-                    particles.add(Particle(
-                        particleBehaviour.contour!!.pointAtLength(
-                            Random.double0(particleBehaviour.contour!!.length),
+                    mainGroup.particles.add(Particle(
+                        mainGroup.contour!!.pointAtLength(
+                            Random.double0(mainGroup.contour!!.length),
                             distanceTolerance = 10.0
                         )
                     ))
@@ -90,8 +84,7 @@ class Nebula(private val program: Program) {
             }
 		}
 
-		particleBehaviour.update(particles)
-		particles.forEach { particleBehaviour.updateParticle(it, frameNumber) }
+		particleGroups.forEach { it.update(frameNumber) }
 
 		frameNumber++
 	}
@@ -104,8 +97,6 @@ class Nebula(private val program: Program) {
                                                         0.000, 0.000, 0.000, 1.000, 0.000)
         program.drawer.image(image)
         program.drawer.drawStyle.colorMatrix = Matrix55.IDENTITY
-		program.drawer.points {
-			particles.forEach { it.draw(this, imageShadow) }
-		}
+		particleGroups.forEach { it.draw(imageShadow) }
 	}
 }
