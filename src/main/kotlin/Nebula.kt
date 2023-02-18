@@ -16,7 +16,7 @@ class Nebula(private val program: Program) {
 	fun setup() {
         mainGroup.resetParameters(
             friction = 0.99,
-            randomAccel = 0.1,
+            randomAccel = 1.0,
             colorBufferShadow = imageShadow
         )
         mainGroup.particles = MutableList(50_000) {
