@@ -67,6 +67,7 @@ class DevTools(private val program: Program,
 			nebula.particleBehaviour.contour?.let { contour ->
 				//draw contour
 				stroke = ColorRGBa.WHITE
+                fill = null
 				contour(contour)
 
 				//draw projected point
