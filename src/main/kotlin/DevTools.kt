@@ -10,13 +10,15 @@ class DevTools(private val program: Program,
 			   private val nebula: Nebula) {
 
 	fun listen(keyEvent: KeyEvent) {
-		if (keyEvent.name == "s") {
-			val prevSeed = nebula.mainGroup.simplexSeed
-			reset()
-			nebula.mainGroup.simplexSeed = prevSeed + 1
-		}
-		else if (keyEvent.name == "r") {
-			reset()
+		when (keyEvent.name) {
+			"s" -> {
+				val prevSeed = nebula.mainGroup.simplexSeed
+				reset()
+				nebula.mainGroup.simplexSeed = prevSeed + 1
+			}
+			"r" -> reset()
+			"3" -> nebula.frameNumber = 5000
+			"4" -> nebula.frameNumber = 6000
 		}
 	}
 

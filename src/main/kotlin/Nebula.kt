@@ -28,7 +28,7 @@ class Nebula(private val program: Program) {
 
 	fun update() {
 		when (frameNumber) {
-            in 0 until 500 -> {
+            in 0..499 -> {
                 repeat(6) {
                     val variance = Random.double()
                     val newParticle = Particle(0.0, program.height/2.0 + 100*variance)
@@ -52,7 +52,7 @@ class Nebula(private val program: Program) {
                     contour = Circle(program.width / 2.0, program.height / 2.0, 200.0).contour,
                 )
             }
-            in 1500 until 5000 -> {
+            in 1501 until 4999 -> {
                 mainGroup.contourAccel += 0.00002
             }
             5000 -> {
@@ -64,9 +64,9 @@ class Nebula(private val program: Program) {
                     program.width/2.0, program.height/2.0 + 110.0).contour
                 )
             }
-            in 5000 until 5500 -> {
+            in 5001..5499 -> {
                 repeat(11) {
-                    mainGroup.particles.removeFirst()
+                    mainGroup.particles.removeFirstOrNull()
                 }
                 repeat(4) {
                     val pos = MutableVector(program.width / 2.0, program.height / 2.0) +
@@ -74,8 +74,29 @@ class Nebula(private val program: Program) {
                     auxiliaryGroup.particles.add(Particle(pos))
                 }
             }
-            in 5500 until 6500 -> {
-                auxiliaryGroup.contourAttraction += 0.00001
+            6000 -> {
+                mainGroup.resetParameters(
+                    friction = 0.96,
+                    simplexSpeed = 0.05,
+                    simplexWeight = 0.1,
+                )
+            }
+            in 6001..6499 -> {
+                auxiliaryGroup.contourAttraction -= 0.0001
+                repeat(4) {
+                    auxiliaryGroup.particles.removeFirstOrNull()
+                }
+                repeat(10) {
+                    mainGroup.particles.add(Particle(Random.double0(program.width.toDouble()), 0.0).apply {
+                        vel.set(0.0, 2.0)
+                    })
+                }
+                repeat(10) {
+                    mainGroup.particles.add(Particle(Random.double0(program.width.toDouble()),
+                            program.height.toDouble()).apply {
+                        vel.set(0.0, -2.0)
+                    })
+                }
             }
 		}
 
