@@ -4,6 +4,7 @@ import org.openrndr.extra.noise.simplex4D
 import org.openrndr.shape.Circle
 import org.openrndr.shape.ShapeContour
 import kotlin.math.absoluteValue
+import kotlin.math.pow
 
 sealed class ParticleBehaviour {
 	open fun update(particles: List<Particle>) {}
@@ -31,7 +32,9 @@ sealed class ParticleBehaviour {
 		var gravityWeight = 0.00002
 		var repulsionWeight = 0.0001
 		var contourAttraction = 0.01
-		var contourAccel = 0.2
+        var contourAttractionReach = 20.0
+        var contourAttractionNormalised = true
+        var contourAccel = 0.2
 		var totalVelWeight = 1.0
 
 		var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
@@ -109,8 +112,10 @@ sealed class ParticleBehaviour {
 				//attraction to contour
 				if (contourAttraction != 0.0) {
 					val s = contour.nearestPatch(particle.pos.toVector2()).position - particle.pos
-					particle.vel.add(s * contourAttraction)
-				}
+                    if (s.magSq() > contourAttractionReach.pow(2)) return@let
+                    if (contourAttractionNormalised) s.normalize()
+                    particle.vel.add(s * contourAttraction)
+                }
 
 				//acceleration from contour
 				if (contourAccel != 0.0) {

@@ -1,4 +1,5 @@
 import org.openrndr.Program
+import org.openrndr.extra.noise.Random
 import org.openrndr.extra.noise.uniformRing
 import org.openrndr.math.Vector2
 import org.openrndr.shape.LineSegment
@@ -11,16 +12,18 @@ class Nebula(private val program: Program) {
 
 	fun setup() {
 		particleBehaviour.apply {
-			friction = 1.0
+			friction = 0.99
 			simplexSeed = 0
 			simplexScale = 0.005
 			simplexSpeed = 0.005
-			simplexWeight = 0.0
-			nearScreenEdgeAccel = 0.0
+			simplexWeight = 0.01
+			nearScreenEdgeAccel = 0.01
 			gravityWeight = 0.0
-			repulsionWeight = 0.0
-			contourAttraction = 0.002
-			contourAccel = 0.0
+			repulsionWeight = 0.001
+			contourAttraction = 0.1
+            contourAttractionReach = 100.0
+            contourAttractionNormalised = true
+			contourAccel = 0.02
 			totalVelWeight = 1.0
 			contour = contour {
 				moveTo(269.5555,547.774,)
@@ -57,6 +60,11 @@ class Nebula(private val program: Program) {
 				curveTo(212.65250000000003,718.329,285.764,635.9390000000001,269.5555,547.774,)
 				close()
 			}
+
+            repeat(10000) {
+                particles.add(Particle(Random.double0(program.width.toDouble()),
+                                       Random.double0(program.height.toDouble())))
+            }
 		}
 	}
 
