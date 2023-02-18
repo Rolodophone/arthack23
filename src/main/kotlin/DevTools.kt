@@ -24,6 +24,7 @@ class DevTools(private val program: Program,
 		nebula.particleGroups.clear()
         nebula.mainGroup.particles.clear()
         nebula.particleGroups.add(nebula.mainGroup)
+        nebula.particleGroups.add(nebula.auxiliaryGroup)
 		nebula.setup()
 		nebula.frameNumber = 0
 	}

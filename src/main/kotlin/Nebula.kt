@@ -7,7 +7,8 @@ import org.openrndr.shape.contour
 
 class Nebula(private val program: Program) {
 	var mainGroup = ParticleGroup(program)
-    var particleGroups = mutableListOf(mainGroup)
+    var auxiliaryGroup = ParticleGroup(program)
+    var particleGroups = mutableListOf(mainGroup, auxiliaryGroup)
 	var frameNumber = 0
     var image = loadImage("data/images/conversation.png")
     var imageShadow = image.shadow.apply { download() }
@@ -27,7 +28,29 @@ class Nebula(private val program: Program) {
             contourAttractionNormalised = true
 			contourAccel = 0.0
 			totalVelWeight = 1.0
-			contour = contour {
+            contour = null
+
+            repeat(5000) {
+                particles.add(Particle(Random.double0(program.width.toDouble()),
+                                       Random.double0(program.height.toDouble())))
+            }
+		}
+
+        auxiliaryGroup.apply {
+            friction = 0.99
+            simplexSeed = 1
+            simplexScale = 0.005
+            simplexSpeed = 0.005
+            simplexWeight = 0.0001
+            nearScreenEdgeAccel = 0.01
+            gravityWeight = 0.0
+            repulsionWeight = 0.0
+            contourAttraction = 0.0
+            contourAttractionReach = 100.0
+            contourAttractionNormalised = true
+            contourAccel = 0.0
+            totalVelWeight = 1.0
+            contour = contour {
                 moveTo(269.5555,525.274,)
                 curveTo(265.744,504.48400000000004,235.56,495.629,231.47899999999998,474.83900000000006,)
                 curveTo(220.8145,421.32400000000007,254.579,367.8090000000001,272.63550000000004,316.21899999999994,)
@@ -62,21 +85,16 @@ class Nebula(private val program: Program) {
                 curveTo(212.65250000000003,695.829,285.764,613.4390000000001,269.5555,525.274,)
                 close()
             }
-
-            repeat(5000) {
-                particles.add(Particle(Random.double0(program.width.toDouble()),
-                                       Random.double0(program.height.toDouble())))
-            }
-		}
+        }
 	}
 
 	fun update() {
 		when (frameNumber) {
             in 0..10000 -> {
                 repeat(10) {
-                    mainGroup.particles.add(Particle(
-                        mainGroup.contour!!.pointAtLength(
-                            Random.double0(mainGroup.contour!!.length),
+                    auxiliaryGroup.particles.add(Particle(
+                        auxiliaryGroup.contour!!.pointAtLength(
+                            Random.double0(auxiliaryGroup.contour!!.length),
                             distanceTolerance = 10.0
                         )
                     ))
