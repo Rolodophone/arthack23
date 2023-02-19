@@ -9,4 +9,8 @@ class Assets {
 	val figureImageShadow = figureImage.shadow.apply { download() }
 	val potentialImage = loadImage("data/images/potential.png")
 	val potentialImageShadow = potentialImage.shadow.apply { download() }
+	val singularityImage = loadImage("data/images/singularity.png")
+	val singularityImageShadow = singularityImage.shadow.apply { download() }
+	val hidingImage = loadImage("data/images/hiding.png")
+	val hidingImageShadow = hidingImage.shadow.apply { download() }
 }

@@ -18,6 +18,9 @@ const val PHASE5 = 4500
 const val PHASE6 = 5700
 const val PHASE7 = 6500
 const val PHASE8 = 6900
+const val PHASE9 = 7300
+const val PHASE10 = 7700
+const val PHASE11 = 8100
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -205,7 +208,7 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 mainGroup.colorBufferShadow = assets.awakeningImageShadow
                 auxiliaryGroup.resetParameters(
                     friction = 0.9,
-                    contourAttraction = 0.5,
+                    contourAttraction = 1.0,
                     contourAccel = 0.5,
                     randomAccel = 2.0,
                     contour = Circle(615.0, 540.0, 100.0).contour,
@@ -233,9 +236,9 @@ class Nebula(private val program: Program, private val assets: Assets) {
             in PHASE7+1..PHASE7+99 -> {
                 repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
                 mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
-                bgImageMatrix += Matrix55(-0.001, 0.0, 0.0, 0.0, 0.0,
-                    0.0, -0.001, 0.0, 0.0, 0.0,
-                    0.0, 0.0, -0.001, 0.0, 0.0,
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0)
             }
@@ -276,9 +279,9 @@ class Nebula(private val program: Program, private val assets: Assets) {
             in PHASE8+1..PHASE8+99 -> {
                 repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
                 mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
-                bgImageMatrix += Matrix55(-0.001, 0.0, 0.0, 0.0, 0.0,
-                    0.0, -0.001, 0.0, 0.0, 0.0,
-                    0.0, 0.0, -0.001, 0.0, 0.0,
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0)
             }
@@ -292,8 +295,8 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 mainGroup.colorBufferShadow = assets.potentialImageShadow
                 auxiliaryGroup.resetParameters(
                     friction = 0.9,
-                    contourAttraction = 0.02,
-                    randomAccel = 0.2,
+                    contourAttraction = 0.2,
+                    randomAccel = 1.0,
                     contour = contour {
                         moveTo(560.0, 730.0)
                         lineTo(950.0, 70.0)
@@ -316,6 +319,78 @@ class Nebula(private val program: Program, private val assets: Assets) {
                             distanceTolerance = 10.0)
                     ))
                 }
+            }
+            PHASE9 -> {
+                auxiliaryGroup.resetParameters()
+            }
+            in PHASE9+1..PHASE9+99 -> {
+                repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE9+100 -> {
+                bgImage = assets.singularityImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.singularityImageShadow
+                auxiliaryGroup.resetParameters(
+                    friction = 0.99,
+                    contourAttraction = -0.01,
+                    contourAccel = 0.01,
+                    randomAccel = 0.01,
+                    contour = Circle(960.0, 150.0, 20.0).contour,
+                    particleWidth = 2,
+                    varyParticleWidth = true,
+                )
+            }
+            in PHASE9+101..PHASE9+199 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+                repeat(10) {
+                    auxiliaryGroup.particles.add(Particle(
+                        auxiliaryGroup.contour!!.pointAtLength(Random.double0(auxiliaryGroup.contour!!.length))
+                    ))
+                }
+            }
+            PHASE10 -> {
+                auxiliaryGroup.resetParameters()
+            }
+            in PHASE10+1..PHASE10+99 -> {
+                repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE10+100 -> {
+                bgImage = assets.hidingImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.hidingImageShadow
+            }
+            in PHASE10+101..PHASE10+199 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
             }
 		}
 
