@@ -170,6 +170,13 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     ))
                 }
             }
+            9500 -> { //phase 6
+                auxiliaryGroup.resetParameters()
+            }
+            in 9501..9999 -> {
+                repeat(20) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.001, 0.001, 0.001, 0.0)
+            }
 		}
 
 		particleGroups.forEach { it.update(frameNumber) }

@@ -17,6 +17,7 @@ class DevTools(private val program: Program,
 			"r" -> reset()
 			"3" -> nebula.frameNumber = 5000
 			"4" -> nebula.frameNumber = 6000
+			"5" -> nebula.frameNumber = 7500
 		}
 	}
 
