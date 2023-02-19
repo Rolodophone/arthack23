@@ -2,7 +2,7 @@ import org.openrndr.KeyEvent
 import org.openrndr.Program
 import org.openrndr.color.ColorRGBa
 
-private const val DRAW_DEBUG_INFO = true
+private const val DRAW_DEBUG_INFO = false
 
 class DevTools(private val program: Program,
 			   private val nebula: Nebula) {
@@ -19,6 +19,7 @@ class DevTools(private val program: Program,
 			"4" -> nebula.frameNumber = PHASE4
 			"5" -> nebula.frameNumber = PHASE5
 			"6" -> nebula.frameNumber = PHASE6
+			"0" -> nebula.frameNumber = PHASE10
 		}
 	}
 

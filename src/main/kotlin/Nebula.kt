@@ -21,6 +21,7 @@ const val PHASE8 = 6900
 const val PHASE9 = 7300
 const val PHASE10 = 7700
 const val PHASE11 = 8100
+const val PHASE12 = 8500
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -382,6 +383,15 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     0.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0, 1.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 1.0)
+//                mainGroup.resetParameters(
+//                    friction = 0.98,
+//                    simplexSpeed = 0.03,
+//                    simplexWeight = 0.05,
+//                    randomAccel = 0.05,
+//                    colorBufferShadow = assets.hidingImageShadow
+//                )
+                mainGroup.particleWidth = 2
+                mainGroup.varyParticleWidth = true
                 mainGroup.colorBufferShadow = assets.hidingImageShadow
             }
             in PHASE10+101..PHASE10+199 -> {
@@ -391,6 +401,64 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     0.0, 0.0, 0.002, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE11 -> {
+                auxiliaryGroup.resetParameters()
+            }
+            in PHASE11+1..PHASE11+99 -> {
+                repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE11+100 -> {
+                bgImage = assets.eliminationImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.eliminationImageShadow
+
+            }
+            in PHASE11+101..PHASE11+199 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE12 -> {
+                mainGroup.resetParameters(
+                    friction = 0.997,
+                    simplexWeight = 0.1,
+                    gravityWeight = 0.0002
+                )
+            }
+            in PHASE12+1..PHASE12+99 -> {
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE12+100 -> {
+                bgImage = null
+            }
+            PHASE12+200 -> {
+                mainGroup.resetParameters(
+                    friction = 0.99,
+                    simplexScale = 0.0005,
+                    simplexWeight = 0.01,
+                    gravityWeight = -0.002,
+                    repulsionWeight = 0.0005,
+                    keepOnScreen = false,
+                )
             }
 		}
 

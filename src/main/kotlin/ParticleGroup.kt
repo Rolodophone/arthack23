@@ -46,6 +46,7 @@ class ParticleGroup(private val program: Program) {
     var colorOffset = ColorRGBa.TRANSPARENT
     var particleWidth = 2
     var varyParticleWidth = true
+    var keepOnScreen = true
 
     fun resetParameters(
         friction: Double = 1.0,
@@ -66,7 +67,8 @@ class ParticleGroup(private val program: Program) {
         colorBufferShadow: ColorBufferShadow? = null,
         colorOffset: ColorRGBa = ColorRGBa.TRANSPARENT,
         particleWidth: Int = 2,
-        varyParticleWidth: Boolean = true
+        varyParticleWidth: Boolean = true,
+        keepOnScreen: Boolean = true
     ) {
         this.friction = friction
         this.simplexSeed = simplexSeed
@@ -87,6 +89,7 @@ class ParticleGroup(private val program: Program) {
         this.colorOffset = colorOffset
         this.particleWidth = particleWidth
         this.varyParticleWidth = varyParticleWidth
+        this.keepOnScreen = keepOnScreen
     }
 
     fun update(frameNumber: Int) {
@@ -135,7 +138,7 @@ class ParticleGroup(private val program: Program) {
         }
 
         //bounce back to the screen
-        when {
+        if (keepOnScreen) when {
             particle.pos.x > program.width + GRID_SQUARE_SIZE*GRID_OFFSCREEN_MARGIN
                 -> particle.vel.x = -particle.vel.x.absoluteValue
             particle.pos.x < -GRID_SQUARE_SIZE*GRID_OFFSCREEN_MARGIN
