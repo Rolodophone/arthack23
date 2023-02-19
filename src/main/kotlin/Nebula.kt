@@ -17,6 +17,7 @@ const val PHASE4 = 3800
 const val PHASE5 = 4500
 const val PHASE6 = 5700
 const val PHASE7 = 6500
+const val PHASE8 = 6900
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -256,6 +257,53 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 )
             }
             in PHASE7+101..PHASE7+199 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+                repeat(10) {
+                    auxiliaryGroup.particles.add(Particle(
+                        auxiliaryGroup.contour!!.pointAtLength(Random.double0(auxiliaryGroup.contour!!.length),
+                            distanceTolerance = 10.0)
+                    ))
+                }
+            }
+            PHASE8 -> {
+                auxiliaryGroup.resetParameters()
+            }
+            in PHASE8+1..PHASE8+99 -> {
+                repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.001, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.001, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.001, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE8+100 -> {
+                bgImage = assets.potentialImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.potentialImageShadow
+                auxiliaryGroup.resetParameters(
+                    friction = 0.9,
+                    contourAttraction = 0.02,
+                    randomAccel = 0.2,
+                    contour = contour {
+                        moveTo(560.0, 730.0)
+                        lineTo(950.0, 70.0)
+                        lineTo(1360.0, 730.0)
+                    },
+                    particleWidth = 3,
+                    varyParticleWidth = true,
+                )
+            }
+            in PHASE8+101..PHASE8+199 -> {
                 mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
                 bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
                     0.0, 0.002, 0.0, 0.0, 0.0,
