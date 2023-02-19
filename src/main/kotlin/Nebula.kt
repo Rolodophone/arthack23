@@ -16,6 +16,7 @@ const val PHASE3 = 2800
 const val PHASE4 = 3800
 const val PHASE5 = 4500
 const val PHASE6 = 5700
+const val PHASE7 = 6500
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -203,7 +204,7 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 mainGroup.colorBufferShadow = assets.awakeningImageShadow
                 auxiliaryGroup.resetParameters(
                     friction = 0.9,
-                    contourAttraction = 0.2,
+                    contourAttraction = 0.5,
                     contourAccel = 0.5,
                     randomAccel = 2.0,
                     contour = Circle(615.0, 540.0, 100.0).contour,
@@ -225,7 +226,49 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     ))
                 }
             }
-
+            PHASE7 -> { //phase 7
+                auxiliaryGroup.resetParameters()
+            }
+            in PHASE7+1..PHASE7+99 -> {
+                repeat(10) { auxiliaryGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(-0.001, 0.0, 0.0, 0.0, 0.0,
+                    0.0, -0.001, 0.0, 0.0, 0.0,
+                    0.0, 0.0, -0.001, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+            PHASE7+100 -> {
+                bgImage = assets.figureImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.awakeningImageShadow
+                auxiliaryGroup.resetParameters(
+                    friction = 0.99,
+                    contourAttraction = -0.1,
+                    randomAccel = 0.1,
+                    contour = LineSegment(690.0, 250.0, 690.0, 990.0).contour,
+                    particleWidth = 3,
+                    varyParticleWidth = true,
+                )
+            }
+            in PHASE7+101..PHASE7+199 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.005, 0.005, 0.005, 0.0)
+                bgImageMatrix += Matrix55(0.002, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.002, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.002, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0,
+                    0.0, 0.0, 0.0, 0.0, 0.0)
+                repeat(10) {
+                    auxiliaryGroup.particles.add(Particle(
+                        auxiliaryGroup.contour!!.pointAtLength(Random.double0(auxiliaryGroup.contour!!.length),
+                            distanceTolerance = 10.0)
+                    ))
+                }
+            }
 		}
 
 		particleGroups.forEach { it.update(frameNumber) }

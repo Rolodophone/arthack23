@@ -5,4 +5,6 @@ class Assets {
 	val conversationImageShadow = conversationImage.shadow.apply { download() }
 	val awakeningImage = loadImage("data/images/awakening.png")
 	val awakeningImageShadow = awakeningImage.shadow.apply { download() }
+	val figureImage = loadImage("data/images/figure.png")
+	val figureImageShadow = figureImage.shadow.apply { download() }
 }
