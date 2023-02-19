@@ -22,10 +22,8 @@ class DevTools(private val program: Program,
 	}
 
 	private fun reset() {
-		nebula.particleGroups.clear()
         nebula.mainGroup.particles.clear()
-        nebula.particleGroups.add(nebula.mainGroup)
-        nebula.particleGroups.add(nebula.auxiliaryGroup)
+		nebula.auxiliaryGroup.particles.clear()
 		nebula.setup()
 		nebula.frameNumber = 0
 	}

@@ -192,7 +192,7 @@ class ParticleGroup(private val program: Program) {
                 if (colorBufferShadow != null) {
                     if (varyParticleWidth) {
                         for (particle in particles) {
-                            drawColouredParticle(this, particle, Random.int(1, particleWidth), colorBufferShadow)
+                            drawColouredParticle(this, particle, Random.int(1, particleWidth+1), colorBufferShadow)
                         }
                     }
                     else {
@@ -205,7 +205,7 @@ class ParticleGroup(private val program: Program) {
                     fill = ColorRGBa.WHITE
                     if (varyParticleWidth) {
                         for (particle in particles) {
-                            drawParticle(this, particle, Random.int(1, particleWidth))
+                            drawParticle(this, particle, Random.int(1, particleWidth+1))
                         }
                     }
                     else {

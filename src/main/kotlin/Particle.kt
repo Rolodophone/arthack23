@@ -1,6 +1,3 @@
-import org.openrndr.color.ColorRGBa
-import org.openrndr.draw.ColorBufferShadow
-import org.openrndr.draw.PointBatchBuilder
 import org.openrndr.math.Vector2
 
 class Particle(x: Double, y: Double) {

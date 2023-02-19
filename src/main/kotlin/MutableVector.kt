@@ -3,6 +3,7 @@ import kotlin.math.sqrt
 
 private val tmpVec = MutableVector()
 
+@Suppress("UNUSED")
 class MutableVector(var x: Double, var y: Double) {
 	constructor() : this(0.0, 0.0)
 	constructor(vector2: Vector2) : this(vector2.x, vector2.y)
