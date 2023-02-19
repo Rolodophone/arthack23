@@ -44,8 +44,8 @@ class ParticleGroup(private val program: Program) {
     var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
     var colorBufferShadow: ColorBufferShadow? = null
     var colorOffset = ColorRGBa.TRANSPARENT
-    var particleWidth = 1
-    var varyParticleWidth = false
+    var particleWidth = 2
+    var varyParticleWidth = true
 
     fun resetParameters(
         friction: Double = 1.0,
@@ -65,8 +65,8 @@ class ParticleGroup(private val program: Program) {
         contour: ShapeContour? = null,
         colorBufferShadow: ColorBufferShadow? = null,
         colorOffset: ColorRGBa = ColorRGBa.TRANSPARENT,
-        particleWidth: Int = 1,
-        varyParticleWidth: Boolean = false
+        particleWidth: Int = 2,
+        varyParticleWidth: Boolean = true
     ) {
         this.friction = friction
         this.simplexSeed = simplexSeed
