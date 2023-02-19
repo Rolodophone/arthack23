@@ -15,7 +15,7 @@ const val PHASE2 = 1500
 const val PHASE3 = 2800
 const val PHASE4 = 3800
 const val PHASE5 = 4500
-const val PHASE6 = 5800
+const val PHASE6 = 5700
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -182,15 +182,10 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 }
             }
             PHASE6 -> { //phase 6
-                auxiliaryGroup.resetParameters(
-                    particleWidth = 2,
-                    varyParticleWidth = true,
-                )
-                mainGroup.randomAccel = 0.0
+                auxiliaryGroup.resetParameters()
             }
             in PHASE6+1..PHASE6+199 -> {
                 repeat(20) { auxiliaryGroup.particles.removeFirstOrNull() }
-                repeat(100) { mainGroup.particles.removeFirstOrNull() }
                 mainGroup.colorOffset += ColorRGBa(0.0025, 0.0025, 0.0025, 0.0)
                 bgImageMatrix += Matrix55(-0.0005, 0.0, 0.0, 0.0, 0.0,
                                           0.0, -0.0005, 0.0, 0.0, 0.0,
@@ -199,19 +194,22 @@ class Nebula(private val program: Program, private val assets: Assets) {
                                           0.0, 0.0, 0.0, 0.0, 0.0)
             }
             PHASE6+200 -> {
-                mainGroup.resetParameters(
-                    friction = 0.99,
-                    contourAttraction = 0.01,
-                    contourAccel = 0.05,
-                    contourAttractionNormalised = true,
-                    contourAttractionReach = 2000.0,
-                    contour = Circle(program.width/2.0, program.height/2.0, 10.0).contour,
-                    particleWidth = 2,
-                    varyParticleWidth = true,
-                    colorOffset = ColorRGBa(1.0, 1.0, 1.0, 1.0),
-                    colorBufferShadow = assets.awakeningImageShadow,
-                )
                 bgImage = assets.awakeningImage
+                bgImageMatrix = Matrix55(0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 0.0,
+                                         0.0, 0.0, 0.0, 1.0, 0.0,
+                                         0.0, 0.0, 0.0, 0.0, 1.0)
+                mainGroup.colorBufferShadow = assets.awakeningImageShadow
+                auxiliaryGroup.resetParameters(
+                    friction = 0.9,
+                    contourAttraction = 0.2,
+                    contourAccel = 0.5,
+                    randomAccel = 2.0,
+                    contour = Circle(615.0, 540.0, 100.0).contour,
+                    particleWidth = 3,
+                    varyParticleWidth = true,
+                )
             }
             in PHASE6+201..PHASE6+399 -> {
                 mainGroup.colorOffset -= ColorRGBa(0.0025, 0.0025, 0.0025, 0.0)
@@ -220,6 +218,12 @@ class Nebula(private val program: Program, private val assets: Assets) {
                                           0.0, 0.0, 0.001, 0.0, 0.0,
                                           0.0, 0.0, 0.0, 0.0, 0.0,
                                           0.0, 0.0, 0.0, 0.0, 0.0)
+                repeat(5) {
+                    auxiliaryGroup.particles.add(Particle(
+                        auxiliaryGroup.contour!!.pointAtLength(Random.double0(auxiliaryGroup.contour!!.length),
+                                distanceTolerance = 10.0)
+                    ))
+                }
             }
 
 		}
