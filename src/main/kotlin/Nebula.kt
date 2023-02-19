@@ -172,10 +172,16 @@ class Nebula(private val program: Program, private val assets: Assets) {
             }
             9500 -> { //phase 6
                 auxiliaryGroup.resetParameters()
+                mainGroup.randomAccel = 0.0
             }
             in 9501..9999 -> {
                 repeat(20) { auxiliaryGroup.particles.removeFirstOrNull() }
                 mainGroup.colorOffset += ColorRGBa(0.001, 0.001, 0.001, 0.0)
+                bgImageMatrix += Matrix55(-0.0002, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, -0.0002, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, -0.0002, 0.0, 0.0,
+                                          0.0, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, 0.0, 0.0, 0.0)
             }
 		}
 

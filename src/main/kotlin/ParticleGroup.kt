@@ -1,6 +1,8 @@
 import org.openrndr.Program
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.ColorBufferShadow
+import org.openrndr.draw.PointBatchBuilder
+import org.openrndr.extra.noise.Random
 import org.openrndr.extra.noise.gradient3D
 import org.openrndr.extra.noise.simplex4D
 import org.openrndr.extra.noise.uniformRing
@@ -42,6 +44,8 @@ class ParticleGroup(private val program: Program) {
     var contour: ShapeContour? = Circle(program.width / 2.0, program.height / 2.0, 300.0).contour
     var colorBufferShadow: ColorBufferShadow? = null
     var colorOffset = ColorRGBa.TRANSPARENT
+    var particleWidth = 1
+    var varyParticleWidth = false
 
     fun resetParameters(
         friction: Double = 1.0,
@@ -60,7 +64,9 @@ class ParticleGroup(private val program: Program) {
         totalVelWeight: Double = 1.0,
         contour: ShapeContour? = null,
         colorBufferShadow: ColorBufferShadow? = null,
-        colorOffset: ColorRGBa = ColorRGBa.TRANSPARENT
+        colorOffset: ColorRGBa = ColorRGBa.TRANSPARENT,
+        particleWidth: Int = 1,
+        varyParticleWidth: Boolean = false
     ) {
         this.friction = friction
         this.simplexSeed = simplexSeed
@@ -79,6 +85,8 @@ class ParticleGroup(private val program: Program) {
         this.contour = contour
         this.colorBufferShadow = colorBufferShadow
         this.colorOffset = colorOffset
+        this.particleWidth = particleWidth
+        this.varyParticleWidth = varyParticleWidth
     }
 
     fun update(frameNumber: Int) {
@@ -182,20 +190,52 @@ class ParticleGroup(private val program: Program) {
         program.drawer.points {
             colorBufferShadow.let {colorBufferShadow ->
                 if (colorBufferShadow != null) {
-                    for (particle in particles) {
-                        if     (particle.pos.x >= 0.0 && particle.pos.x < 1920.0 &&
-                                particle.pos.y >= 0.0 && particle.pos.y < 1080.0) {
-                            fill = colorBufferShadow[particle.pos.x.toInt(), particle.pos.y.toInt()] + colorOffset
+                    if (varyParticleWidth) {
+                        for (particle in particles) {
+                            drawColouredParticle(this, particle, Random.int(1, particleWidth), colorBufferShadow)
                         }
-                        point(particle.pos.x, particle.pos.y)
+                    }
+                    else {
+                        for (particle in particles) {
+                            drawColouredParticle(this, particle, particleWidth, colorBufferShadow)
+                        }
                     }
                 }
                 else {
                     fill = ColorRGBa.WHITE
-                    for (particle in particles) {
-                        point(particle.pos.x, particle.pos.y)
+                    if (varyParticleWidth) {
+                        for (particle in particles) {
+                            drawParticle(this, particle, Random.int(1, particleWidth))
+                        }
+                    }
+                    else {
+                        for (particle in particles) {
+                            drawParticle(this, particle, particleWidth)
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    private fun drawParticle(pointBatchBuilder: PointBatchBuilder, particle: Particle, size: Int) {
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                pointBatchBuilder.point(particle.pos.x + x, particle.pos.y + y)
+            }
+        }
+    }
+
+    private fun drawColouredParticle(pointBatchBuilder: PointBatchBuilder, particle: Particle, size: Int,
+                                     colorBufferShadow: ColorBufferShadow) {
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                if     (particle.pos.x >= 0.0 && particle.pos.x < 1920.0 &&
+                        particle.pos.y >= 0.0 && particle.pos.y < 1080.0) {
+                    pointBatchBuilder.fill =
+                        colorBufferShadow[particle.pos.x.toInt(), particle.pos.y.toInt()] + colorOffset
+                }
+                pointBatchBuilder.point(particle.pos.x + x, particle.pos.y + y)
             }
         }
     }
