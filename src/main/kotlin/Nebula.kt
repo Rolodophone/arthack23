@@ -460,6 +460,12 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     keepOnScreen = false,
                 )
             }
+            9500 -> {
+                mainGroup.particles.clear()
+                auxiliaryGroup.particles.clear()
+                setup()
+                frameNumber = 0
+            }
 		}
 
 		particleGroups.forEach { it.update(frameNumber) }
