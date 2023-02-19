@@ -12,10 +12,10 @@ import org.openrndr.shape.contour
 
 const val PHASE1 = 0
 const val PHASE2 = 1500
-const val PHASE3 = 3500
-const val PHASE4 = 4500
-const val PHASE5 = 6000
-const val PHASE6 = 7500
+const val PHASE3 = 2800
+const val PHASE4 = 3800
+const val PHASE5 = 4500
+const val PHASE6 = 5800
 
 class Nebula(private val program: Program, private val assets: Assets) {
 	var mainGroup = ParticleGroup(program)
@@ -60,7 +60,7 @@ class Nebula(private val program: Program, private val assets: Assets) {
                     contour = Circle(program.width / 2.0, program.height / 2.0, 200.0).contour,
                 )
             }
-            in PHASE2+1..PHASE2+1999 -> {
+            in PHASE2+1..PHASE2+1000 -> {
                 mainGroup.contourAccel += 0.00005
             }
             PHASE3 -> { //phase 3
@@ -91,7 +91,7 @@ class Nebula(private val program: Program, private val assets: Assets) {
             }
             in PHASE4+1..PHASE4+499 -> {
                 auxiliaryGroup.contourAttraction -= 0.0001
-                repeat(4) {
+                repeat(10) {
                     auxiliaryGroup.particles.removeFirstOrNull()
                 }
                 repeat(10) {
@@ -109,6 +109,8 @@ class Nebula(private val program: Program, private val assets: Assets) {
             PHASE5 -> { //phase 5
                 mainGroup.colorBufferShadow = assets.conversationImageShadow
                 mainGroup.colorOffset = ColorRGBa(1.0, 1.0, 1.0, 0.0)
+                mainGroup.particleWidth = 1
+                mainGroup.varyParticleWidth = false
             }
             in PHASE5+1..PHASE5+499 -> {
                 mainGroup.colorOffset -= ColorRGBa(0.001, 0.001, 0.001, 0.0)
@@ -186,15 +188,40 @@ class Nebula(private val program: Program, private val assets: Assets) {
                 )
                 mainGroup.randomAccel = 0.0
             }
-            in PHASE6+1..PHASE6+499 -> {
+            in PHASE6+1..PHASE6+199 -> {
                 repeat(20) { auxiliaryGroup.particles.removeFirstOrNull() }
-                mainGroup.colorOffset += ColorRGBa(0.001, 0.001, 0.001, 0.0)
-                bgImageMatrix += Matrix55(-0.0002, 0.0, 0.0, 0.0, 0.0,
-                                          0.0, -0.0002, 0.0, 0.0, 0.0,
-                                          0.0, 0.0, -0.0002, 0.0, 0.0,
+                repeat(100) { mainGroup.particles.removeFirstOrNull() }
+                mainGroup.colorOffset += ColorRGBa(0.0025, 0.0025, 0.0025, 0.0)
+                bgImageMatrix += Matrix55(-0.0005, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, -0.0005, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, -0.0005, 0.0, 0.0,
                                           0.0, 0.0, 0.0, 0.0, 0.0,
                                           0.0, 0.0, 0.0, 0.0, 0.0)
             }
+            PHASE6+200 -> {
+                mainGroup.resetParameters(
+                    friction = 0.99,
+                    contourAttraction = 0.01,
+                    contourAccel = 0.05,
+                    contourAttractionNormalised = true,
+                    contourAttractionReach = 2000.0,
+                    contour = Circle(program.width/2.0, program.height/2.0, 10.0).contour,
+                    particleWidth = 2,
+                    varyParticleWidth = true,
+                    colorOffset = ColorRGBa(1.0, 1.0, 1.0, 1.0),
+                    colorBufferShadow = assets.awakeningImageShadow,
+                )
+                bgImage = assets.awakeningImage
+            }
+            in PHASE6+201..PHASE6+399 -> {
+                mainGroup.colorOffset -= ColorRGBa(0.0025, 0.0025, 0.0025, 0.0)
+                bgImageMatrix += Matrix55(0.001, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, 0.001, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, 0.001, 0.0, 0.0,
+                                          0.0, 0.0, 0.0, 0.0, 0.0,
+                                          0.0, 0.0, 0.0, 0.0, 0.0)
+            }
+
 		}
 
 		particleGroups.forEach { it.update(frameNumber) }

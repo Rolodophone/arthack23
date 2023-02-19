@@ -15,9 +15,10 @@ class DevTools(private val program: Program,
 				nebula.mainGroup.simplexSeed = prevSeed + 1
 			}
 			"r" -> reset()
-			"3" -> nebula.frameNumber = 5000
-			"4" -> nebula.frameNumber = 6000
-			"5" -> nebula.frameNumber = 7500
+			"3" -> nebula.frameNumber = PHASE3
+			"4" -> nebula.frameNumber = PHASE4
+			"5" -> nebula.frameNumber = PHASE5
+			"6" -> nebula.frameNumber = PHASE6
 		}
 	}
 
